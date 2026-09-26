@@ -7,7 +7,7 @@ const SCREENHEIGHT = 300;
 const FPS = 60;
 
 
-
+//
 const scannerWidth = SCREENWIDTH * 0.1;
 const scannerHeight = SCREENHEIGHT;
 
