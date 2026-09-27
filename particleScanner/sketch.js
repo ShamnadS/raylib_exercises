@@ -2,26 +2,31 @@ const r = require('raylib');
 const s = require('./scanner');
 const p = require('./particle');
 
-
 const SCREENWIDTH = 500;
 const SCREENHEIGHT = 300;
 const FPS = 60;
 
+const scanner1Width = SCREENWIDTH * 0.1;
+const scanner1Height = SCREENHEIGHT;
 
+const particle1X = SCREENWIDTH * 0.5;
+const particle1Y = 0;
+const particle1Width = SCREENWIDTH * 0.1;
 
-const scannerWidth = SCREENWIDTH * 0.1;
-const scannerHeight = SCREENHEIGHT;
-
-const particleX1 = SCREENWIDTH * 0.3;
-const particleY1 = 0;
-const particleWidth1 = SCREENWIDTH * 0.2;
-
-const particleX2 = SCREENWIDTH * 0.9;
+const particle2X = SCREENWIDTH * 0.4;
 const particleY2 = 0;
-const particleWidth2 = 1.5;
+const particle2Width = 1;
 
-let scannerX = 0;
-let scannerY = 0;
+let scanner1X = 0;
+let scanner1Y = 0;
+
+const scanner2Width = SCREENWIDTH * 0.1;
+const scanner2Height = SCREENHEIGHT;
+
+let scanner2X = SCREENWIDTH - scanner2Width;
+let scanner2Y = 0;
+let color1;
+let color2;
 
 function setup() {
     r.InitWindow(SCREENWIDTH, SCREENHEIGHT, "PARTICLE DETECTOR");
@@ -29,22 +34,29 @@ function setup() {
 }
 
 function update() {
-    scannerX = s.direction(scannerX, scannerWidth, SCREENWIDTH);
+    scanner1X = s.LeftToRight(scanner1X, scanner1Width, SCREENWIDTH);
+    scanner2X = s.RightToLeft(scanner2X, scanner2Width, SCREENWIDTH);
 }
 
+function analysis() {
+    const scanner1Particle1 = s.isParticleDetected(scanner1X, scanner1Width, particle1X, particle1Width);
+    const scanner2Particle1 = s.isParticleDetected(scanner2X, scanner2Width, particle1X, particle1Width);
+    const scanner1Particle2 = s.isParticleDetected(scanner1X, scanner1Width, particle2X, particle2Width);
+    const scanner2Particle2 = s.isParticleDetected(scanner2X, scanner2Width, particle2X, particle2Width);
 
-
+    color1 = s.checkIntersection(scanner1Particle1, scanner1Particle2);
+    color2 = s.checkIntersection(scanner2Particle1, scanner2Particle2);
+}
 
 function draw() {
 
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
-    p.createParticle(particleX1, particleY1, SCREENHEIGHT, particleWidth1);
-    p.createParticle(particleX2, particleY2, SCREENHEIGHT, particleWidth2);
-    const particle1 = s.isParticleDetected(scannerX, scannerWidth, particleX1, particleWidth1);
-    const particle2 = s.isParticleDetected(scannerX, scannerWidth, particleX2, particleWidth2);
-    const scannerColor = s.checkIntersection(particle1, particle2);
-    r.DrawRectangle(scannerX, scannerY, scannerWidth, scannerHeight, scannerColor);
+    p.createParticle(particle1X, particle1Y, SCREENHEIGHT, particle1Width);
+    p.createParticle(particle2X, particleY2, SCREENHEIGHT, particle2Width);
+    analysis();
+    r.DrawRectangle(scanner1X, scanner1Y, scanner1Width, scanner1Height, color1);
+    r.DrawRectangle(scanner2X, scanner2Y, scanner2Width, scanner2Height, color2);
     r.EndDrawing();
 }
 
