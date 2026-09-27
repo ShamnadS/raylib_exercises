@@ -1,8 +1,8 @@
 const r = require("raylib");
 
-function createParticle(particleX, particleY, SCREENHEIGHT, particleWidth) {
+function createParticle(particleX, particleY, particleHeight, particleWidth) {
     const color = r.SKYBLUE;
-    r.DrawRectangle(particleX, particleY, particleWidth, SCREENHEIGHT, color);
+    r.DrawRectangle(particleX, particleY, particleWidth, particleHeight, color);
 }
 
 module.exports = {
